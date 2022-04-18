@@ -1,17 +1,18 @@
-import { format } from 'date-fns';
 import { GetStaticPaths, GetStaticProps } from 'next';
-
+import Head from 'next/head';
+import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
+import { format } from 'date-fns';
 import Prismic from '@prismicio/client';
 
-import ptBR from 'date-fns/locale/pt-BR';
 import { RichText } from 'prismic-dom';
-import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
-import hash from 'object-hash';
 import { useRouter } from 'next/router';
+import { ptBR } from 'date-fns/locale';
+import Header from '../../components/Header';
+
 import { getPrismicClient } from '../../services/prismic';
+
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
-import Header from '../../components/Header';
 
 interface Post {
   first_publication_date: string | null;
@@ -35,65 +36,69 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps): JSX.Element {
-  const router = useRouter();
-  if (router.isFallback) {
-    return <span>Carregando...</span>;
-  }
-
-  /* eslint-disable no-param-reassign */
   const totalWords = post.data.content.reduce((total, contentItem) => {
-    const bodyText = RichText.asText(contentItem.body);
+    const stringHeading = contentItem.heading;
+    total += stringHeading.split(' ').length;
 
-    total += contentItem.heading.split(' ').length;
-    total += bodyText.split(' ').length;
+    const stringBody = RichText.asText(contentItem.body);
+    total += stringBody.split(' ').length;
 
     return total;
   }, 0);
-  /* eslint-enable no-param-reassign */
 
-  const readingTime = Math.ceil(totalWords / 200);
+  const minutesOfReading = Math.ceil(totalWords / 200);
+
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <h1>Carregando...</h1>;
+  }
+
+  const formattedDate = format(
+    new Date(post.first_publication_date),
+    'dd MMM yyyy',
+    {
+      locale: ptBR,
+    }
+  );
 
   return (
     <>
-      <Header />
-      <div className={styles.banner}>
-        <img src={post.data.banner.url} alt="banner" height="400px" />
-      </div>
-      <main className={commonStyles.content}>
-        <article className={styles.post}>
+      <Head>
+        <title>{post.data.title} | spacetraveling</title>
+      </Head>
+      <main className={commonStyles.container}>
+        <Header />
+        <div className={styles.post}>
+          <img
+            className={styles.photo}
+            src={post.data.banner.url}
+            alt={post.data.title}
+          />
+
           <h1>{post.data.title}</h1>
-          <ul className={styles.info}>
-            <li>
-              <FiCalendar size={20} />
-              <time className={styles.listItem}>
-                {post.first_publication_date}
-              </time>
-            </li>
-            <li>
-              <FiUser size={20} />
-              <span className={styles.listItem}>{post.data.author}</span>
-            </li>
-            <li>
-              <FiClock size={20} />
-              <span className={styles.listItem}>{readingTime} min</span>
-            </li>
-          </ul>
-          {post.data.content.map(content => (
-            <section
-              key={hash({ ...content, ts: new Date().getTime() })}
-              className={styles.postContent}
-            >
-              <h2 className={styles.contentHeading}>{content.heading}</h2>
+          <div className={commonStyles.info}>
+            <div>
+              <FiCalendar size={20} /> <span>{formattedDate}</span>
+            </div>
+            <div>
+              <FiUser size={20} /> <span>{post.data.author}</span>
+            </div>
+            <div>
+              <FiClock size={20} /> <span>{`${minutesOfReading} min`}</span>
+            </div>
+          </div>
+
+          {post.data.content.map(item => (
+            <article key={item.heading}>
+              <h2>{item.heading}</h2>
               <div
-                className={styles.contentBody}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{
-                  __html: RichText.asHtml(content.body),
-                }}
+                className={styles.postContent}
+                dangerouslySetInnerHTML={{ __html: RichText.asHtml(item.body) }}
               />
-            </section>
+            </article>
           ))}
-        </article>
+        </div>
       </main>
     </>
   );
@@ -101,16 +106,20 @@ export default function Post({ post }: PostProps): JSX.Element {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const prismic = getPrismicClient();
-  const posts = await prismic.query(
-    [Prismic.predicates.at('document.type', 'posts')],
-    {
-      fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
-      pageSize: 2,
-    }
-  );
+  const posts = await prismic.query([
+    Prismic.predicates.at('document.type', 'post'),
+  ]);
+
+  const paths = posts.results.map(post => {
+    return {
+      params: {
+        slug: post.uid,
+      },
+    };
+  });
 
   return {
-    paths: posts.results.map(post => ({ params: { slug: post.uid } })),
+    paths,
     fallback: true,
   };
 };
@@ -119,28 +128,25 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params;
 
   const prismic = getPrismicClient();
-  const response = await prismic.getByUID('posts', String(slug), {});
 
-  const contentArray = response.data.content.map(content => {
-    return {
-      heading: RichText.asText(content.heading),
-      body: [...content.body],
-    };
-  });
+  const response = await prismic.getByUID('post', String(slug), {});
 
   const post = {
-    first_publication_date: format(
-      new Date(response.first_publication_date),
-      'dd MMM yyyy',
-      { locale: ptBR }
-    ),
+    uid: response.uid,
+    first_publication_date: response.first_publication_date,
     data: {
-      title: RichText.asText(response.data.title),
+      title: response.data.title,
+      subtitle: response.data.subtitle,
       banner: {
         url: response.data.banner.url,
       },
-      author: RichText.asText(response.data.author),
-      content: contentArray,
+      author: response.data.author,
+      content: response.data.content.map(content => {
+        return {
+          heading: content.heading,
+          body: [...content.body],
+        };
+      }),
     },
   };
 
@@ -148,6 +154,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       post,
     },
-    revalidate: 60 * 15,
   };
 };
