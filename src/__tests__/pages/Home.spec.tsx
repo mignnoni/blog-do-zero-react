@@ -1,10 +1,10 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { GetStaticPropsContext } from 'next';
-import { ParsedUrlQuery } from 'querystring';
-import { RouterContext } from 'next/dist/next-server/lib/router-context';
+import { render, screen, fireEvent, waitFor } '@testing-library/react';
+import { GetStaticPropsContext } 'next';
+import { ParsedUrlQuery } 'querystring';
+import { RouterContext } 'next/dist/next-server/lib/router-context';
 
-import { getPrismicClient } from '../../services/prismic';
-import App, { getStaticProps } from '../../pages';
+import { getPrismicClient } '../../services/prismic';
+import App, { getStaticProps } '../../pages';
 
 interface Post {
   uid?: string;

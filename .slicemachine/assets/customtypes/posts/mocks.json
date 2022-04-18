@@ -1,0 +1,87 @@
+{
+  "id": "f8238026-ec32-46a2-a729-491b7339ab75",
+  "uid": "ea-earum-itaque",
+  "type": "posts",
+  "data": {
+    "title": [
+      {
+        "type": "heading1",
+        "text": "Disintermediate magnetic partnerships",
+        "spans": []
+      }
+    ],
+    "subtitle": [
+      {
+        "type": "heading1",
+        "text": "Utilize 24/365 solutions",
+        "spans": []
+      }
+    ],
+    "author": [
+      {
+        "type": "paragraph",
+        "text": "Enim id ipsum qui. Velit adipisicing voluptate magna deserunt pariatur velit ipsum eu voluptate dolor do elit ad. Officia magna consequat Lorem irure officia excepteur.",
+        "spans": []
+      }
+    ],
+    "banner": {
+      "dimensions": {
+        "width": 900,
+        "height": 500
+      },
+      "alt": "Placeholder image",
+      "copyright": null,
+      "url": "https://images.unsplash.com/photo-1587840171670-8b850147754e?w=900&h=500&fit=crop"
+    },
+    "content": [
+      {
+        "heading": [
+          {
+            "type": "heading1",
+            "text": "Utilize scalable systems",
+            "spans": []
+          }
+        ],
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Nisi ex fugiat aute voluptate anim pariatur elit aute in sunt deserunt aliqua magna esse ut.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "heading": [
+          {
+            "type": "heading1",
+            "text": "Productize transparent functionalities",
+            "spans": []
+          }
+        ],
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Est aliquip quis nulla occaecat elit. Reprehenderit elit cillum consectetur incididunt esse duis aliquip. Quis esse id laborum dolor veniam tempor aliquip proident deserunt nostrud anim.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "heading": [
+          {
+            "type": "heading1",
+            "text": "Expedite viral experiences",
+            "spans": []
+          }
+        ],
+        "body": [
+          {
+            "type": "paragraph",
+            "text": "Eu sit sunt aliquip. Reprehenderit aute reprehenderit incididunt cupidatat veniam.",
+            "spans": []
+          }
+        ]
+      }
+    ]
+  }
+}

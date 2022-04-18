@@ -1,1 +1,61 @@
-// TODO
+.logo {
+  margin: 5rem 0 4rem 0;
+}
+
+.posts {
+
+  margin-bottom: 3rem;
+
+  a {
+    display: block;
+    cursor: pointer;
+
+
+
+    h2 {
+      color: var(--heading);
+      font-size: 1.75rem;
+    }
+
+    .subtitle {
+      margin-top: 0.5rem;
+      font-size: 1.125rem;
+      text-align: justify;
+    }
+
+    .infoContainer {
+      margin-top: 24px;
+      display: flex;
+      color: var(--info);
+
+      .info {
+        display: flex;
+        align-items: center;
+
+        & + .info {
+          margin-left: 1.5rem;
+        }
+
+        p, time {
+          margin-left: 0.5rem;
+        }
+      }
+    }
+
+  }
+
+
+}
+
+.loadMorePosts {
+  background: none;
+  color: var(--highlight);
+  margin-top: 1rem;
+  margin-bottom: 5rem;
+  font-weight: 600;
+  border: none;
+}
+
+.hideButton {
+  display: none;
+}
